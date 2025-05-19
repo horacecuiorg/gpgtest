@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Import GPG private key
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+
+          # 创建空 gpg.conf 避免权限报错
+          if [ ! -f ~/.gnupg/gpg.conf ]; then
+            touch ~/.gnupg/gpg.conf
+          fi
+          chmod 600 ~/.gnupg/gpg.conf
+
+      - name: Decrypt sensitive files
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          ./decrypt.sh
+
+      - name: Run deployment
+        run: |
+          set -e
+          echo "Secrets decrypted, start your deploy commands here."
+          cd $GITHUB_WORKSPACE
+          tree -a -I '.git'
+          cat ./.env
+          # 例如：docker-compose up -d

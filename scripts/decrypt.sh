@@ -2,7 +2,8 @@
 set -e
 
 GPG_PASSPHRASE=${GPG_PASSPHRASE:-}
-CONFIG_FILE=".fileconfig"
+CONFIG_FILE="$(dirname "$0")/.fileconfig"
+
 
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "[decrypt] ERROR: Config file $CONFIG_FILE not found."

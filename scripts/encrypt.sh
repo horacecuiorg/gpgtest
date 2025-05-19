@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-CONFIG_FILE=".fileconfig"
+CONFIG_FILE="$(dirname "$0")/.fileconfig"
+
 GPG_RECIPIENT="cuiyinhu0808@qq.com"
 
 echo "[encrypt] Reading files to encrypt from $CONFIG_FILE..."

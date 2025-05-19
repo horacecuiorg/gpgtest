@@ -1,0 +1,4 @@
+# 这是需要加密的文件列表
+./.env
+./config/secrets.json
+./settings/local.yaml

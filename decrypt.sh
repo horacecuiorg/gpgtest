@@ -1,7 +1,19 @@
 #!/bin/bash
 set -e
+#export GPG_TTY=$(tty)
 
-GPG_PASSPHRASE=${GPG_PASSPHRASE:-}
+# 加载密码变量
+if [ -f "$HOME/.env" ]; then
+  source "$HOME/.env"
+fi
+
+if [ -z "$GPG_PASSPHRASE" ]; then
+  echo "[decrypt] ERROR: GPG_PASSPHRASE environment variable not set"
+  exit 1
+fi
+
+
+#GPG_PASSPHRASE=${GPG_PASSPHRASE:-}
 CONFIG_FILE="$(dirname "$0")/.fileconfig"
 
 
